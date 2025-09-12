@@ -1,0 +1,16 @@
+{
+  "name": "disruptica-test",
+  "private": true,
+  "workspaces": [
+    "backend-disruptica",
+    "frontend-disruptica"
+  ],
+  "scripts": {
+    "dev:backend": "npm --workspace backend-disruptica run dev",
+    "dev:frontend": "npm --workspace frontend-disruptica run dev",
+    "dev": "npm run dev:backend & npm run dev:frontend",
+    "build:backend": "npm --workspace backend-disruptica run build",
+    "build:frontend": "npm --workspace frontend-disruptica run build",
+    "build": "npm run build:backend && npm run build:frontend"
+  }
+}
