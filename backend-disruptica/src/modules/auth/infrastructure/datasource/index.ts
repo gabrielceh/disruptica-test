@@ -1,1 +1,1 @@
-export * from './LocalAuthDatasource';
+export * from './LocalAuth.datasource';

@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+
 import { LoginUseCase } from "@modules/auth/application/usecases";
 import { ApiResponse } from "@src/core/shared";
 import { generateToken } from "@src/core/shared/utils";
