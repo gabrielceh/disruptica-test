@@ -1,2 +1,2 @@
-export * from './AuthController';
-export * from './AuthRoutes';
+export * from './Auth.controller';
+export * from './Auth.routes';

@@ -1,5 +1,5 @@
 import { AuthRepository } from "@modules/auth/domain/repositories";
-import { User } from "../../domain/entities";
+import { User } from "@modules/auth/domain/entities";
 
 export class LoginUseCase {
   repository: AuthRepository;
