@@ -30,19 +30,41 @@ export class LocalPatientDatasource implements PatientDatasource {
     return patient;
   }
 
-  async deactivate(patientId: string): Promise<void> {
+  async deactivate(patientId: string): Promise<boolean> {
     const patient = this.patients.find(p => p.id === patientId);
-    if (patient) patient.deactivate();
+    if (!patient){
+      return false;
+    } 
+    patient.deactivate();
+    return true;
   }
 
-  async activate(patientId: string): Promise<void> {
+  async activate(patientId: string): Promise<boolean> {
     const patient = this.patients.find(p => p.id === patientId);
-    if (patient) patient.activate();
+    if (!patient){ 
+      return false;  
+    }
+    patient.activate();
+    return true;
   }
 
-  async addConsultation(patientId: string, consultation: Consultation): Promise<void> {
+  async addConsultation(patientId: string, newConsultation: Partial<Consultation>): Promise<Consultation> {
     const patient = this.patients.find(p => p.id === patientId);
     if (!patient) throw new Error("Patient not found");
-    patient.addConsultation(consultation);
+
+    if(!newConsultation.observations || !newConsultation.reason){
+      throw new Error("Observations and reason are required");
+    }
+    const consultationToAdd = {
+        id: crypto.randomUUID(),
+        date: newConsultation.date || new Date(),
+        reason: newConsultation.reason,
+        observations: newConsultation.observations,
+
+    }
+
+    patient.addConsultation(consultationToAdd);
+    return consultationToAdd;
+
   }
 }

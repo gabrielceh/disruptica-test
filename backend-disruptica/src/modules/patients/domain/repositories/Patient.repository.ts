@@ -3,11 +3,11 @@ import { Consultation, Patient } from "../entities";
 
 
 export interface PatientRepository {
-  getActivePatients(): Promise<Patient[]>;
-  findByName(name: string): Promise<Patient[]>;
+  activate(patientId: string): Promise<boolean>;
+  addConsultation(patientId: string, consultation: Partial<Consultation>): Promise<Consultation>;
   create(patient: Patient): Promise<Patient>;
+  deactivate(patientId: string): Promise<boolean>;
+  findByName(name: string): Promise<Patient[]>;
+  getActivePatients(): Promise<Patient[]>;
   update(patient: Patient): Promise<Patient>;
-  deactivate(patientId: string): Promise<void>;
-  activate(patientId: string): Promise<void>;
-  addConsultation(patientId: string, consultation: Consultation): Promise<void>;
 }

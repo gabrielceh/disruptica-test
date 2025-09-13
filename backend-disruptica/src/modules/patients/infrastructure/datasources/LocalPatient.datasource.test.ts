@@ -89,16 +89,16 @@ describe("PatientMemoryDatasource", () => {
     });
     await ds.create(p);
 
-    const c = new Consultation("c1", new Date("2025-01-01"), "Control", "OK");
+    const c = { date: new Date("2025-01-01"), reason: "Control", observations: "OK"};
     await ds.addConsultation("p5", c);
 
     const found = (await ds.findByName("Carmen"))[0];
     expect(found.consultations).toHaveLength(1);
-    expect(found.consultations[0].id).toBe("c1");
+    expect(found.consultations[0].reason).toBe("Control");
   });
 
   it("addConsultation en id inexistente lanza error", async () => {
-    const c = new Consultation("cX", new Date(), "Motivo", "Obs");
+    const c = { date: new Date(), reason: "Motivo", observations: "Obs"};
     await expect(ds.addConsultation("no-id", c)).rejects.toThrow("Patient not found");
   });
 });

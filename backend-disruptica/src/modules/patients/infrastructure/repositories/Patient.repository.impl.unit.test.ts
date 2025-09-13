@@ -33,7 +33,7 @@ describe("PatientRepositoryImpl (delegation)", () => {
     const p = new Patient({
       id: "m1",
       name: "Mock",
-      lastName: "Uno",
+      lastName: "One",
       birthDate: new Date(),
       gender: Gender.OTHER,
     });
@@ -44,8 +44,8 @@ describe("PatientRepositoryImpl (delegation)", () => {
   });
 
   it("addConsultation delega con patientId y consultation", async () => {
-    const c = new Consultation("cMock", new Date(), "Motivo", "Obs");
-    mockDatasource.addConsultation.mockResolvedValue();
+    const c = new Consultation({id:"cMock", date: new Date(), reason: "Reason", observations: "Obs"});  
+    mockDatasource.addConsultation.mockResolvedValue(c);
     await repo.addConsultation("m1", c);
     expect(mockDatasource.addConsultation).toHaveBeenCalledWith("m1", c);
   });

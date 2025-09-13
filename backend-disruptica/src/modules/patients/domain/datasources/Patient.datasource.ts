@@ -3,10 +3,10 @@ import { Consultation, Patient } from "../entities";
 
 
 export interface PatientDatasource {
-  activate(patientId: string): Promise<void>;
-  addConsultation(patientId: string, consultation: Consultation): Promise<void>;
+  activate(patientId: string): Promise<boolean>;
+  addConsultation(patientId: string, newConsultation: Partial<Consultation>): Promise<Consultation>;
   create(patient: Patient): Promise<Patient>;
-  deactivate(patientId: string): Promise<void>;
+  deactivate(patientId: string): Promise<boolean>;
   findByName(name: string): Promise<Patient[]>;
   getActivePatients(): Promise<Patient[]>;
   update(patient: Patient): Promise<Patient>;

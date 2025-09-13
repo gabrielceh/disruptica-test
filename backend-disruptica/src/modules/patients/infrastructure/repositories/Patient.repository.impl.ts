@@ -22,15 +22,15 @@ export class PatientRepositoryImpl implements PatientRepository {
     return this.datasource.update(patient);
   }
 
-  deactivate(patientId: string): Promise<void> {
+  deactivate(patientId: string): Promise<boolean> {
     return this.datasource.deactivate(patientId);
   }
 
-  activate(patientId: string): Promise<void> {
+  activate(patientId: string): Promise<boolean> {
     return this.datasource.activate(patientId);
   }
 
-  addConsultation(patientId: string, consultation: Consultation): Promise<void> {
+  addConsultation(patientId: string, consultation: Consultation): Promise<Consultation> {
     return this.datasource.addConsultation(patientId, consultation);
   }
 }
