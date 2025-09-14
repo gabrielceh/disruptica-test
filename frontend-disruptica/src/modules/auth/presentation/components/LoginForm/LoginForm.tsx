@@ -1,11 +1,20 @@
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 
 
 export function LoginForm() {
   return (
     <form>
-      <Input type="email" label="Email" placeholder="Email" />
-      <Input type="password" label="Password" placeholder="Password"  />
+      <div>
+        <Label htmlFor="email">Email</Label>
+        <Input type="email" id="email" placeholder="Email" />
+      </div>
+      
+      <div>
+        <Label htmlFor="password">Password</Label>
+        <Input type="password" id="password" placeholder="Password" />
+      </div>
     </form>
   )
 }
