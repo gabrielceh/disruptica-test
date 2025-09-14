@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { verifyToken } from "@core/shared/utils";
 import { ApiResponse } from "../ResponseHandler";
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const validateToken = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
