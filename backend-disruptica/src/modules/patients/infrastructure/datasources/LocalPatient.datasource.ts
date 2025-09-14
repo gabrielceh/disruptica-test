@@ -14,8 +14,8 @@ export class LocalPatientDatasource implements PatientDatasource {
     const lower = name.toLowerCase();
     return this.patients.filter(
       p =>
-        p.name.toLowerCase().includes(lower) ||
-        p.lastName.toLowerCase().includes(lower)
+        (p.name.toLowerCase().includes(lower) ||
+        p.lastName.toLowerCase().includes(lower)) && p.isActive
     );
   }
 
