@@ -1,6 +1,6 @@
 import { AuthDatasource } from "@modules/auth/domain/datasource";
 import { User } from "@modules/auth/domain/entities";
-import { usersData } from "../data";
+import { usersData } from "../mock";
 
 
 export class LocalAuthDatasource implements AuthDatasource {
