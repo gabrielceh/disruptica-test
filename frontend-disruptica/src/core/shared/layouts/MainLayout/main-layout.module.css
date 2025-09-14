@@ -1,0 +1,87 @@
+.container {
+	width: 100%;
+	height: 100dvh;
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+	background-color: var(--color-slate-100);
+}
+
+.header {
+	width: 100%;
+	height: 80px;
+	background-color: var(--color-primary);
+}
+.headerContainer {
+	width: 100%;
+	height: 100%;
+	padding: 0.5rem 2rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.main {
+	width: 100%;
+	height: 100%;
+
+	padding: 1rem 2rem;
+	margin-inline: auto;
+}
+
+.nav {
+	display: flex;
+	gap: 1rem;
+	align-items: center;
+}
+
+.link {
+	position: relative;
+}
+.link:hover {
+	color: var(--color-primary-foreground);
+}
+.link::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 3px;
+	width: 0;
+	background-color: var(--color-primary-foreground);
+	transition: width 0.2s ease-in-out;
+}
+.link:hover::after {
+	width: 100%;
+}
+.link.active {
+	color: var(--color-secondary-foreground);
+}
+.link.active::after {
+	width: 100%;
+	background-color: var(--color-secondary-foreground);
+}
+
+.footer {
+	width: 100%;
+	height: 150px;
+	background-color: var(--color-secondary);
+}
+.footerContainer {
+	color: var(--color-slate-50);
+	width: 100%;
+	height: 100%;
+	padding: 2rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+@media screen and (width > 768px) {
+	.main,
+	.footerContainer,
+	.headerContainer {
+		max-width: 1420px;
+		margin-inline: auto;
+	}
+}
