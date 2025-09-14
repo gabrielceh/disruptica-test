@@ -1,7 +1,13 @@
+import { HeroUIProvider } from '@heroui/react';
+import { useNavigate } from 'react-router';
 import { AppRouter } from "@core/router/AppRouter";
 
 
 export default function App() {
-  return <AppRouter />;
+  const navigate = useNavigate();
+
+  return <HeroUIProvider navigate={navigate}>
+          <AppRouter />
+        </HeroUIProvider>
 }
 
