@@ -2,6 +2,8 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "CommonJS",
+    "lib": ["ES2020"],
+    "types": ["node", "jest"], 
     "moduleResolution": "Node",
     "rootDir": "./src",
     "outDir": "./dist",
@@ -11,9 +13,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": "./src",
-    "composite": true,
-    "emitDeclarationOnly": true,
-    "allowImportingTsExtensions": true,
     "paths": {
       "@src/*": ["*"],
       "@modules/*": ["modules/*"],
@@ -21,6 +20,6 @@
       "@shared/*": ["shared/*"]
     }
   },
-  "include": ["src"],
-  "exclude": ["dist", "node_modules"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "**/*.spec.ts", "**/__tests__/**"]
 }
