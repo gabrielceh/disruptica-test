@@ -2,7 +2,7 @@ import { Router } from "express";
 import { LocalAuthDatasource } from "@modules/auth/infrastructure/datasource";
 import { AuthRepositoryImpl } from "@modules/auth/infrastructure/repositories";
 import { LoginUseCase } from "@modules/auth/application/usecases";
-import { AuthController } from "./Auth.controller";
+import { AuthController } from "@modules/auth/controllers/Auth.controller";
 import { validateLogin } from "../infrastructure/middleware";
 
 const router = Router();
