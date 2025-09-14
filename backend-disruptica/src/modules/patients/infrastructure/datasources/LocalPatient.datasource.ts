@@ -1,9 +1,10 @@
-import { PatientDatasource } from "../../domain/datasources";
-import { Consultation, Patient } from "../../domain/entities";
+import { PatientDatasource } from "@modules/patients/domain/datasources";
+import { Consultation, Patient } from "@modules/patients/domain/entities";
+import { patientsMock } from "../mocks/patients.mock";
 
 
 export class LocalPatientDatasource implements PatientDatasource {
-  private patients: Patient[] = [];
+  private patients: Patient[] = patientsMock;
 
   async getActivePatients(): Promise<Patient[]> {
     return this.patients.filter(p => p.isActive);
@@ -26,12 +27,22 @@ export class LocalPatientDatasource implements PatientDatasource {
   async update(patient: Patient): Promise<Patient> {
     const index = this.patients.findIndex(p => p.id === patient.id);
     if (index === -1) throw new Error("Patient not found");
-    this.patients[index] = patient;
+
+    this.patients[index] = new Patient({
+      ...this.patients[index],
+      name: patient.name,
+      lastName: patient.lastName,
+      birthDate: patient.birthDate,
+      gender: patient.gender,
+    }) ;
+
     return patient;
   }
 
   async deactivate(patientId: string): Promise<boolean> {
+    
     const patient = this.patients.find(p => p.id === patientId);
+    
     if (!patient){
       return false;
     } 

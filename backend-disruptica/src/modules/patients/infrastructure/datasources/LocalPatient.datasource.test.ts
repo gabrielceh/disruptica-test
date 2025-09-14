@@ -11,7 +11,6 @@ describe("PatientMemoryDatasource", () => {
 
   it("create + getActivePatients debe retornar pacientes activos", async () => {
     const p = new Patient({
-      id: "p1",
       name: "Laura",
       lastName: "Gómez",
       birthDate: new Date("1985-09-12"),
@@ -22,12 +21,12 @@ describe("PatientMemoryDatasource", () => {
 
     const actives = await ds.getActivePatients();
     expect(actives).toHaveLength(1);
-    expect(actives[0].id).toBe("p1");
+    expect(typeof actives[0].id).toBe("string");
+    expect(actives[0].id).toBeDefined();
   });
 
   it("findByName debe buscar por nombre o apellido (case-insensitive)", async () => {
     const p = new Patient({
-      id: "p2",
       name: "Juan",
       lastName: "Perez",
       birthDate: new Date("1990-01-01"),
@@ -43,16 +42,16 @@ describe("PatientMemoryDatasource", () => {
   });
 
   it("deactivate y activate deben cambiar isActive", async () => {
-    const p = new Patient({
+    const patient = new Patient({
       id: "p3",
       name: "Ana",
       lastName: "Lopez",
       birthDate: new Date("1975-05-05"),
       gender: Gender.FEMALE,
     });
-    await ds.create(p);
+    await ds.create(patient);
 
-    await ds.deactivate("p3");
+    await ds.deactivate(patient.id);
     let actives = await ds.getActivePatients();
     expect(actives).toHaveLength(0);
 
@@ -62,35 +61,35 @@ describe("PatientMemoryDatasource", () => {
   });
 
   it("update debe modificar los datos del paciente", async () => {
-    const p = new Patient({
-      id: "p4",
+    const patient = new Patient({
       name: "Miguel",
       lastName: "Ramirez",
       birthDate: new Date("1980-03-03"),
       gender: Gender.MALE,
     });
-    await ds.create(p);
+    await ds.create(patient);
 
-    p.lastName = "Rivera";
-    await ds.update(p);
+    patient.lastName = "Rivera";
+    await ds.update(patient);
 
-    const found = await ds.findByName("Rivera");
-    expect(found).toHaveLength(1);
-    expect(found[0].id).toBe("p4");
+    const patientFound = await ds.findByName("Rivera");
+    expect(patientFound).toHaveLength(1);
+    expect(typeof patientFound[0].id).toBe("string");
+    expect(patientFound[0].id).toBeDefined();
   });
 
   it("addConsultation agrega una consulta al paciente", async () => {
-    const p = new Patient({
+    const patient = new Patient({
       id: "p5",
       name: "Carmen",
       lastName: "Soto",
       birthDate: new Date("1992-07-07"),
       gender: Gender.FEMALE,
     });
-    await ds.create(p);
+    await ds.create(patient);
 
-    const c = { date: new Date("2025-01-01"), reason: "Control", observations: "OK"};
-    await ds.addConsultation("p5", c);
+    const consultation = { date: new Date("2025-01-01"), reason: "Control", observations: "OK"};
+    await ds.addConsultation("p5", consultation);
 
     const found = (await ds.findByName("Carmen"))[0];
     expect(found.consultations).toHaveLength(1);

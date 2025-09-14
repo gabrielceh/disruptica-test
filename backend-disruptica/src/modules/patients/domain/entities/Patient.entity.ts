@@ -3,7 +3,7 @@ import { Consultation } from "./Consultation.entity";
 import { Gender } from "./Gender.enum";
 
 export interface PatientProps {
-  id:             string;
+  id?:             string;
   name:           string;
   lastName:       string;
   birthDate:      Date;
@@ -18,10 +18,10 @@ export class Patient {
   public birthDate:     Date;
   public gender:        Gender;
   public consultations: Consultation[];
-  public isActive:     boolean;
+  public isActive:      boolean;
 
   constructor(props: PatientProps) {
-    this.id = props.id;
+    this.id = props.id || crypto.randomUUID();
     this.name = props.name;
     this.lastName = props.lastName;
     this.birthDate = props.birthDate;

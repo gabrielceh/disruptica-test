@@ -1,15 +1,15 @@
 interface ConsultationProps {
-  id: string;
-  date: Date;
-  reason: string;
+  id:           string;
+  date:         Date;
+  reason:       string;
   observations: string;
 }
 
 
 export class Consultation {
-  public readonly id: string;
-  public date: Date;
-  public reason: string;
+  public readonly id:  string;
+  public date:         Date;
+  public reason:       string;
   public observations: string;
 
   constructor(newConsultation: ConsultationProps) {

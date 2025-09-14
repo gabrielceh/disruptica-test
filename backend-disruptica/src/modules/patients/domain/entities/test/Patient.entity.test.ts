@@ -1,7 +1,6 @@
-// src/patients/domain/entities/patient.entity.test.ts
-import { Patient } from "./Patient.entity";
-import { Consultation } from "./Consultation.entity";
-import { Gender } from "./Gender.enum";
+import { Patient } from "../Patient.entity";
+import { Consultation } from "../Consultation.entity";
+import { Gender } from "../Gender.enum";
 
 describe("Patient entity", () => {
   const baseProps = {
@@ -19,7 +18,7 @@ describe("Patient entity", () => {
   });
 
   it("should accept initial consultations", () => {
-    const c = new Consultation("c1", new Date(), "dolor de cabeza", "sin observaciones");
+    const c = new Consultation({id:"c1", date: new Date(), reason: "dolor de cabeza", observations: "sin observaciones"});
     const p = new Patient({ ...baseProps, consultations: [c] });
     expect(p.consultations).toHaveLength(1);
     expect(p.consultations[0].id).toBe("c1");
@@ -27,7 +26,7 @@ describe("Patient entity", () => {
 
   it("addConsultation should push a new consultation", () => {
     const p = new Patient(baseProps);
-    const c = new Consultation("c2", new Date(), "control", "todo OK");
+    const c = new Consultation({id: "c2", date: new Date(), reason:"control", observations: "todo OK"});
     p.addConsultation(c);
     expect(p.consultations).toContain(c);
     expect(p.consultations).toHaveLength(1);
