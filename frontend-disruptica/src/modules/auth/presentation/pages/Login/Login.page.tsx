@@ -3,6 +3,7 @@ import { LoginFormContainer } from "../../containers";
 import styles from "./login-page.module.css"
 import { hasTokenExp } from "@/core/utils";
 import { Navigate } from "react-router";
+import { PatientsRoutes } from "@/modules/patients/router";
 
 export  function LoginPage() {
   const token = useAuthStore((state) => state.token);
@@ -18,7 +19,7 @@ export  function LoginPage() {
   }
     
   if(token) {
-    return <Navigate to={"/home"} />;
+    return <Navigate to={`/${PatientsRoutes.patients}`} />;
   }
 
   

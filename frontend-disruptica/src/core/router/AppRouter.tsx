@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router";
 import { MainLayout } from "@core/shared/layouts";
 import { AuthRoutes, AuthRouter } from "@/modules/auth/router";
 import { RootPage } from "./RootPage";
+import { PatientsRoutes } from "@/modules/patients/router";
 
 export function AppRouter() {
   return (
@@ -11,7 +12,7 @@ export function AppRouter() {
         <Route path={`${AuthRoutes.auth}/*`} element={<AuthRouter />} />
 
         <Route element={<MainLayout />}>
-          <Route path="/home" element={<h1>Dashboard</h1>} />
+          <Route path={`/${PatientsRoutes.patients}`} element={<h1>Dashboard</h1>} />
         </Route>
 
         <Route path='*' element={<div>Page 404</div>} />

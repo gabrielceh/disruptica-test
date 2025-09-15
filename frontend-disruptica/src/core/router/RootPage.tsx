@@ -2,6 +2,7 @@ import { Navigate } from "react-router";
 import { useAuthStore } from "@/core/stores/auth";
 import { hasTokenExp } from "@core/utils";
 import { AuthRoutes } from "@/modules/auth/router";
+import { PatientsRoutes } from "@/modules/patients/router";
 
 
 export function RootPage() {
@@ -19,7 +20,7 @@ export function RootPage() {
 		return <Navigate to={`/${AuthRoutes.auth}/${AuthRoutes.login}`} />;
 	}
 
-	const targetRoute = token ? `/home` : `/${AuthRoutes.auth}/${AuthRoutes.login}`;
+	const targetRoute = token ? `/${PatientsRoutes.patients}` : `/${AuthRoutes.auth}/${AuthRoutes.login}`;
 
 	return <Navigate to={targetRoute} />;
 }

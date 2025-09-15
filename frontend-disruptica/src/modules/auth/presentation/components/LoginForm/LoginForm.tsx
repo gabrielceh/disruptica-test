@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { ErrorFormMessage } from "@/core/shared/components";
 import { loginSchema, type LoginFormValues } from "@modules/auth/presentation/schemas";
 import { useLoginMutation } from "@modules/auth/presentation/hooks";
+import { PatientsRoutes } from "@/modules/patients/router";
 
 export function LoginForm() {
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +34,7 @@ export function LoginForm() {
       },
       onSuccess: () => {
         setError(null);
-        navigate('/home');
+        navigate(`/${PatientsRoutes.patients}`);
       }
     });
   };
