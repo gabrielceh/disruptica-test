@@ -1,21 +1,20 @@
-import { Suspense } from "react";
+
 import { Route, Routes } from "react-router";
-import { Loader } from "@core/shared/components";
 import { MainLayout } from "@core/shared/layouts";
-import { LoginPage } from "@/modules/auth/presentation/pages";
+import { AuthRoutes, AuthRouter } from "@/modules/auth/router";
+import { RootPage } from "./RootPage";
 
 export function AppRouter() {
   return (
-    <Suspense fallback={<Loader />}>
       <Routes>
-        {/* Página inicial: Login */}
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<RootPage/>} />
+        <Route path={`${AuthRoutes.auth}/*`} element={<AuthRouter />} />
 
-        {/* Rutas con layout */}
         <Route element={<MainLayout />}>
-          <Route path="/dashboard" element={<h1>Dashboard</h1>} />
+          <Route path="/home" element={<h1>Dashboard</h1>} />
         </Route>
-      </Routes>
-    </Suspense>
+
+        <Route path='*' element={<div>Page 404</div>} />
+    </Routes>
   );
 }

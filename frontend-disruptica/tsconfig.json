@@ -5,11 +5,12 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-		"baseUrl": ".",
-		"paths": {
-			"@/*": ["./src/*"],
-			"@modules/*": ["./src/modules/*"],
-			"@core/*": ["./src/core/*"]
-		}
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+        "@/*": ["./src/*"],
+        "@modules/*": ["./src/modules/*"],
+        "@core/*": ["./src/core/*"]
+    }
 	}
 }
