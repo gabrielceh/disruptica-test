@@ -1,4 +1,7 @@
+import { useState } from "react";
+import styles from "./login-form.module.css"
 import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,8 +10,6 @@ import { Label } from "@/components/ui/label";
 import { ErrorFormMessage } from "@/core/shared/components";
 import { loginSchema, type LoginFormValues } from "@modules/auth/presentation/schemas";
 import { useLoginMutation } from "@modules/auth/presentation/hooks";
-import { useState } from "react";
-import { useNavigate } from "react-router";
 
 export function LoginForm() {
   const [error, setError] = useState<string | null>(null);
@@ -38,15 +39,15 @@ export function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <Label htmlFor="email">Email</Label>
+    <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+      <div className={styles.inputContainer}>
+        <Label htmlFor="email" className={styles.label}>Email</Label>
         <Input type="email" id="email" placeholder="Email" {...register("email", { required: true })} />
         {errors.email && <ErrorFormMessage message={errors.email.message} />}
       </div>
       
-      <div>
-        <Label htmlFor="password">Password</Label>
+      <div className={styles.inputContainer}>
+        <Label htmlFor="password" className={styles.label}>Password</Label>
         <Input type="password" id="password" placeholder="Password" {...register("password", { required: true })} />
         {errors.password && <ErrorFormMessage message={errors.password.message} />}
       </div>
@@ -56,7 +57,7 @@ export function LoginForm() {
       </div>
 
       <div>
-        <Button>{loginMutation.isPending ? "Signing in..." : "Login"}</Button>
+        <Button type="submit">{loginMutation.isPending ? "Signing in..." : "Login"}</Button>
       </div>
     </form>
   )

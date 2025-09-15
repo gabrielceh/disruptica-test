@@ -15,16 +15,11 @@ export const useLoginMutation = () => {
     mutationFn: (credentials: LoginParams) =>  loginUsecase.execute(credentials.email, credentials.password),
     
     onSuccess: (data) => {
-      if(data.status === 'error' || data.data === null) {
-        console.log(data);
-        
+      if(data.status === 'error' || data.data === null) {        
         throw new Error(data.message);
       }
 
       login(data.data);
-    },
-    onError: (error) => {
-      console.log(error);
     },
   })
 
