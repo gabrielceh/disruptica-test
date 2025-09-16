@@ -1,6 +1,6 @@
 
 import { Route, Routes } from "react-router";
-import { MainLayout } from "@core/shared/layouts";
+import { MainLayout } from "@/core/presentation/layouts";
 import { AuthRoutes, AuthRouter } from "@/modules/auth/router";
 import { RootPage } from "./RootPage";
 import { PatientsRoutes } from "@/modules/patients/router";

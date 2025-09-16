@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { ErrorFormMessage } from "@/core/shared/components";
+import { ErrorFormMessage } from "@/core/presentation/components";
 import { loginSchema, type LoginFormValues } from "@modules/auth/presentation/schemas";
 import { useLoginMutation } from "@modules/auth/presentation/hooks";
 import { PatientsRoutes } from "@/modules/patients/router";

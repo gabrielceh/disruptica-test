@@ -1,4 +1,4 @@
-import {NotFound} from '@core/shared/components/NotFound/NotFound';
+import {NotFound} from '@/core/presentation/components/NotFound/NotFound';
 
 export function PageNotFound() {
 	return (
