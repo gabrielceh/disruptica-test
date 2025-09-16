@@ -10,6 +10,10 @@ export class PatientRepositoryImpl implements PatientRepository {
     return this.datasource.getActivePatients();
   }
 
+  getPatientById(patientId: string): Promise<Patient | null> {
+    return this.datasource.getPatientById(patientId);
+  }
+
   findByName(name: string): Promise<Patient[]> {
     return this.datasource.findByName(name);
   }

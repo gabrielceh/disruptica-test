@@ -6,6 +6,7 @@ import {
   DeactivatePatientUseCase, 
   FindPatientByNameUseCase, 
   GetActivePatientsUseCase, 
+  GetPatientByIdUsecase, 
   UpdatePatientUseCase 
 } from "@modules/patients/application/usecases";
 import { Patient } from "@modules/patients/domain/entities";
@@ -94,6 +95,17 @@ export class PatientController {
       const usecase = new AddConsultationUseCase(this.repo);
       const result = await usecase.execute(id, consultation);
       return res.status(201).json(ApiResponse.success(result));
+    } catch (error: any) {
+      return res.status(400).json(ApiResponse.error(error.message));
+    }
+  };
+
+  getPatientById = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const usecase = new GetPatientByIdUsecase(this.repo);
+      const patient = await usecase.execute(id);
+      return res.json(ApiResponse.success(patient));
     } catch (error: any) {
       return res.status(400).json(ApiResponse.error(error.message));
     }
