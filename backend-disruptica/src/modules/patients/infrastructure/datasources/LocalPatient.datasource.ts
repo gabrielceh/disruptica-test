@@ -10,6 +10,11 @@ export class LocalPatientDatasource implements PatientDatasource {
     return this.patients.filter(p => p.isActive);
   }
 
+  async getPatientById(patientId:string): Promise<Patient | null> {
+    const patientFound = this.patients.find(p => p.id === patientId && p.isActive);
+    return patientFound ?? null;
+  }
+
   async findByName(name: string): Promise<Patient[]> {
     const lower = name.toLowerCase();
     return this.patients.filter(

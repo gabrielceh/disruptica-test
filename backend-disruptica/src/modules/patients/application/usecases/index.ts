@@ -4,4 +4,5 @@ export * from './CreatePatient.usecase';
 export * from './DeactivatePatient.usecase';
 export * from './FindPatientByName.usecase';
 export * from './GetActivePatients.usecase';
+export * from './GetPatientById.usecase';
 export * from './UpdatePatient.usecase';

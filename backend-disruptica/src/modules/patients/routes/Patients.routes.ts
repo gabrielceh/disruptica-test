@@ -16,6 +16,11 @@ router.get('/',
   patientController.getActive
 );
 
+router.get('/patient/:id',
+  validateToken, 
+  patientController.getPatientById
+);
+
 router.get('/search/:name', 
   validateToken,
   validateFindByName,

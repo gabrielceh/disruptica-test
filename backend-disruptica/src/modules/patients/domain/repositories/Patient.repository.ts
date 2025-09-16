@@ -9,5 +9,6 @@ export interface PatientRepository {
   deactivate(patientId: string): Promise<boolean>;
   findByName(name: string): Promise<Patient[]>;
   getActivePatients(): Promise<Patient[]>;
+  getPatientById(patientId: string): Promise<Patient | null>;
   update(patient: Patient): Promise<Patient>;
 }
