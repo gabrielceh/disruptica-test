@@ -1,6 +1,7 @@
 import { jwtDecode } from 'jwt-decode';
 
 export const hasTokenExp = (token: string): boolean => {
+  if(!token) return true;
 	try {
 		const decoded = jwtDecode(token);
 		if (decoded.exp && decoded.exp < Date.now() / 1000) {

@@ -119,14 +119,15 @@
   * {
     @apply border-border outline-ring/50;
 	}
-  body {
-    @apply bg-background text-foreground;
-	}
 }
 
 
 .body,
 .html,
 * {
-	font-family: 'Nunito', sans-serif;
+  	font-family: 'Nunito', sans-serif;
+}
+.body,
+.html{
+  background-color: #fff;
 }

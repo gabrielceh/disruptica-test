@@ -14,7 +14,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 	  setUserAuth: ({  token, user }: { user: User; token: string;  }) => {
 		set(() => {
 		  return {
-		    token,
+		    token: `Bearer ${token}`,
 			user: user	
 		  };
 		});

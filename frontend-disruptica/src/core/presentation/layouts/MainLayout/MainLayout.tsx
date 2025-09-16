@@ -1,8 +1,8 @@
-import { NavLink, Outlet, type NavLinkProps } from 'react-router';
-import styles from './main-layout.module.css';
 import { forwardRef } from 'react';
-import clsx from 'clsx';
+import { NavLink, Outlet, type NavLinkProps } from 'react-router';
 import { PatientsRoutes } from '@/modules/patients/router';
+import clsx from 'clsx';
+import styles from './main-layout.module.css';
 
 export function MainLayout() {
 	return (
@@ -12,28 +12,28 @@ export function MainLayout() {
             <div className={styles.navContainer}>
               <header className={styles.header}>
                   <div className={styles.headerContainer}>
-                      <span>Prueba Técnica</span>
+                      <span>Disruptica</span>
                   </div>
               </header>
 
               <nav className={styles.nav}>
-                <CustomLink to={`/${PatientsRoutes.patients}`}>Pacientes</CustomLink>
+                <CustomLink to={`/${PatientsRoutes.patients}`}>Patients</CustomLink>
               </nav>
-
             </div>
+            
             <footer className={styles.footer}>
               <div className={styles.footerContainer}>
                   <p>
-                      Hecho con 💪 por{' '}
+                      Made with 💪 by{' '}
                       <a href='https://gabrielcervantes.vercel.app/' target='_blank'>
                           {' '}
                           Gabriel Cervantes
                       </a>
                   </p>
               </div>
-          </footer>
-
+            </footer>
           </section>
+
           <section>
             <header className={styles.header}></header>
 			<main className={styles.main}>

@@ -1,5 +1,6 @@
-import  { GenderType, type Consultation, type Patient } from "@modules/patients/domain/entities";
+import  { Gender } from "@/core/domain/entities";
 import type { ConsultationResponse, PatientResponse } from "@modules/patients/infrastructure/models";
+import type { Consultation, Patient } from "../../domain/entities";
 
 export class PatientMapper {
   static fromModelToEntity(model: PatientResponse): Patient {
@@ -8,7 +9,7 @@ export class PatientMapper {
       name:          model.name,
       lastName:      model.lastName,
       dateOfBirth:   model.birthDate,
-      gender:        model.gender == 'F' ? GenderType.F : model.gender == 'M' ? GenderType.M : GenderType.F,
+      gender:        model.gender == 'F' ? Gender.F : model.gender == 'M' ? Gender.M : Gender.F,
       consultations: model.consultations.map((consultation) => ConsultationMapper.fromModelToEntity(consultation)),
       isActive:      model.isActive,
     };

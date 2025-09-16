@@ -34,6 +34,25 @@ export class ApiPatientsDatasource implements PatientsDatasource {
   }
 
   async getPatient(patientId: string): Promise<BaseResponse<Patient | null>> {
-      throw new Error("Method not implemented.");
+    try {
+      const response:BaseResponse<Patient[]> = await this.axiosService.get({
+        path: `/patients/patient/${patientId}`,
+      });
+      
+      if (response.status !== 'success') {
+         throw new Error(response.message);
+      }
+
+      const model = PatientResponse.fromJSON(response.data);
+      const entity = PatientMapper.fromModelToEntity(model);
+
+      return {
+        ...response,
+        data:    entity,
+      }
+          
+    } catch (error) {
+      return errorResponse(error);
+    }
   }
 }
