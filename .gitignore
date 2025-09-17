@@ -10,6 +10,7 @@ pnpm-debug.log*
 **/.env
 **/.env.*
 !.env.example   # deja un archivo de ejemplo si quieres
+!/.env.example 
 
 # Build outputs
 **/dist/
