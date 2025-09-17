@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import styles from "./patient-detail-page.module.css";
 import { useQuery } from "@tanstack/react-query";
-import { usePatientDetailsStore } from "../../stores/patientDetailStore";
+import { usePatientDetailsStore } from "@modules/patients/presentation/stores/patientDetailStore";
 import { getPatientByIdUsecase } from "@/modules/patients/di/patients.dependencies";
 import { useParams } from "react-router";
+
 import { Loader, PageTitle } from "@/core/presentation/components";
-import {PatientInfoSection, TableConsultation} from "../../components/PatientsDetailPage/";
+import {PatientInfoSection, TableConsultation} from "@modules/patients/presentation/components/PatientsDetailPage/";
 
 
 export  function PatientDetailsPage() {
@@ -21,9 +22,7 @@ export  function PatientDetailsPage() {
 
   useEffect(() => {
     if (query.isSuccess && query.data) {
-      setPatient(query.data.data);
-      console.log(query.data.data);
-      
+      setPatient(query.data.data);      
       return;
     }
   }, [query.isSuccess, query.data]);

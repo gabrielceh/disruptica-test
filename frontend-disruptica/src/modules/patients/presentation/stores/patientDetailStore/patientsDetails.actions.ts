@@ -1,6 +1,7 @@
-import type { Patient } from "@/modules/patients/domain/entities";
+import type { Consultation, Patient } from "@/modules/patients/domain/entities";
 
 
 export interface PatientDetailActions {
-	setPatient: (patient:Patient | null) => void
+  setPatient: (patient:Patient | null) => void
+  addNewConsultation: (patientId:string, consultation:Consultation) => void
 }

@@ -1,19 +1,19 @@
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./patient-info-section.module.css"
 import { Gender, Roles } from "@/core/domain/entities";
 import { genderToString } from "@/core/utils";
 import { patientSchema, type PatientFormValues } from "@modules/patients/presentation/schemas/patientSchema";
 import { useAuthStore } from "@/core/stores/auth";
-import { useEffect } from "react";
 import { usePatientDetailsStore } from "@modules/patients/presentation/stores/patientDetailStore";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useUpdatePatientMutation } from "@modules/patients/presentation/hooks";
 
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/core/presentation/components";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useUpdatePatientMutation } from "../../../hooks";
 import { toast } from "sonner";
 
 

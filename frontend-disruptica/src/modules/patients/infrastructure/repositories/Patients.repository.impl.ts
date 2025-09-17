@@ -1,7 +1,7 @@
 import type { BaseResponse } from "@/core/models";
 import { PatientsRepository } from "@modules/patients/domain/repositories";
 import type { PatientsDatasource } from "@modules/patients/domain/datasources";
-import type { Patient } from "@modules/patients/domain/entities";
+import type { Consultation, Patient } from "@modules/patients/domain/entities";
 
 export class PatientsRespositoryImpl implements PatientsRepository {
   datasource: PatientsDatasource;
@@ -23,4 +23,7 @@ export class PatientsRespositoryImpl implements PatientsRepository {
     return await this.datasource.updatePatient(patient);
   }
 
+  async addConsutlation(patientId: string, newConsultation: Partial<Consultation>): Promise<BaseResponse<Consultation | null>> {
+    return await this.datasource.addConsutlation(patientId, newConsultation);
+  }
 } 

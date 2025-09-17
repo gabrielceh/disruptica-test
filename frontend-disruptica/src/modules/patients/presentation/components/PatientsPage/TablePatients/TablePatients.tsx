@@ -1,12 +1,12 @@
 import  dayjs  from "dayjs";
 import type { Patient } from "@/modules/patients/domain/entities";
-import { usePatientsStore } from "../../../stores/patientsStore";
+import { usePatientsStore } from "@modules/patients/presentation/stores/patientsStore";
+import { PatientsRoutes } from "@/modules/patients/router";
 
 import { Button } from "@/components/ui/button";
-import { Eye, Trash } from "lucide-react";
+import { Eye } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useNavigate } from "react-router";
-import { PatientsRoutes } from "@/modules/patients/router";
 
 export  function TablePatients() {
   const navigate = useNavigate();
@@ -40,10 +40,6 @@ export  function TablePatients() {
                     <Eye/>
                   </Button>
 
-                  <Button>
-                    <Trash/>
-                  </Button>
- 
                 </div>
               </TableCell>
             </TableRow>
