@@ -16,9 +16,16 @@
 	height: 100%;
 	padding: 0.5rem 2rem;
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
-  color: #fff;
+    color: #fff;
+  }
+  .headerUser{
+    width: 100%;
+    height: 100%;
+    padding: 0.5rem 2rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 .menuSection {
@@ -83,7 +90,7 @@
 
 .footer {
 	width: 100%;
-	height: 150px;
+	height: 70px;
 }
 .footerContainer {
 	color: var(--color-primary);

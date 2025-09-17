@@ -8,7 +8,7 @@ export class PatientMapper {
       id:            model.id,
       name:          model.name,
       lastName:      model.lastName,
-      dateOfBirth:   model.birthDate,
+      birthDate:     model.birthDate,
       gender:        model.gender == 'F' ? Gender.F : model.gender == 'M' ? Gender.M : Gender.F,
       consultations: model.consultations.map((consultation) => ConsultationMapper.fromModelToEntity(consultation)),
       isActive:      model.isActive,

@@ -9,13 +9,18 @@ export class PatientsRespositoryImpl implements PatientsRepository {
   constructor(datasource: PatientsDatasource) {
     this.datasource = datasource;
   }
-
+  
   async getPatients(): Promise<BaseResponse<Patient[] | null>> {
     return await this.datasource.getPatients();
   }
+  
   async getPatient(patientId: string): Promise<BaseResponse<Patient | null>> {
     return await this.datasource.getPatient(patientId);
   }
-
+      
+  async updatePatient(patient: Partial<Patient>): Promise<BaseResponse<Patient | null>> {
+    console.log("Repository updatePatient", patient);
+    return await this.datasource.updatePatient(patient);
+  }
 
 } 

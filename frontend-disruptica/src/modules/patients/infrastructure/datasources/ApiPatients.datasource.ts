@@ -55,4 +55,28 @@ export class ApiPatientsDatasource implements PatientsDatasource {
       return errorResponse(error);
     }
   }
+
+  async updatePatient(patient: Partial<Patient>): Promise<BaseResponse<Patient | null>> {
+    try {
+      const response:BaseResponse<Patient> = await this.axiosService.put({
+        path: `/patients/update/${patient.id}`,
+        data: patient,
+      });
+      
+      if (response.status !== 'success') {
+         throw new Error(response.message);
+      }
+
+      const model = PatientResponse.fromJSON(response.data);
+      const entity = PatientMapper.fromModelToEntity(model);
+
+      return {
+        ...response,
+        data:    entity,
+      }
+          
+    } catch (error) {
+      return errorResponse(error);
+    }
+  }
 }

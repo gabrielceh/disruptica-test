@@ -1,10 +1,28 @@
-import { forwardRef } from 'react';
-import { NavLink, Outlet, type NavLinkProps } from 'react-router';
+import { forwardRef, Suspense, type ReactNode } from 'react';
+import { NavLink, useNavigate, type NavLinkProps } from 'react-router';
 import { PatientsRoutes } from '@/modules/patients/router';
 import clsx from 'clsx';
 import styles from './main-layout.module.css';
+import { useAuthStore } from '@/core/stores/auth';
+import { DropdownMenu, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
+import { Loader } from '../../components';
 
-export function MainLayout() {
+interface Props {
+	children: ReactNode;
+}
+
+export function MainLayout({children}:Props) {
+  const user = useAuthStore(state => state.user);
+  const logout = useAuthStore(state => state.setLogout);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/",{ replace: true });
+  };
+
 	return (
 		<div className={styles.container}>
 
@@ -12,7 +30,7 @@ export function MainLayout() {
             <div className={styles.navContainer}>
               <header className={styles.header}>
                   <div className={styles.headerContainer}>
-                      <span>Disruptica</span>
+                     Disruptica
                   </div>
               </header>
 
@@ -35,9 +53,23 @@ export function MainLayout() {
           </section>
 
           <section>
-            <header className={styles.header}></header>
+            <header className={clsx(styles.header)}>
+              <div className={styles.headerUser}>
+                 <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">{user.email}</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56 bg-white px-2 py-1 rounded-md">
+                    <DropdownMenuSeparator />
+                    <DropdownMenuRadioGroup>
+                      <DropdownMenuRadioItem value="top" onClick={handleLogout}>Logout</DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </header>
 			<main className={styles.main}>
-				<Outlet />
+				<Suspense fallback={<Loader />}>{children}</Suspense>
 			</main>
           </section>
 

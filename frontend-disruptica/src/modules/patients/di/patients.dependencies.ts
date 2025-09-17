@@ -1,4 +1,4 @@
-import { GetPatientByIdUsecase, GetPatientsUsecase } from "../application/usecases";
+import { GetPatientByIdUsecase, GetPatientsUsecase, UpdatePatientUsecase } from "../application/usecases";
 import { ApiPatientsDatasource } from "../infrastructure/datasources";
 import { PatientsRespositoryImpl } from "../infrastructure/repositories";
 
@@ -7,3 +7,4 @@ const repository = new PatientsRespositoryImpl(datasource);
 
 export const getPatientsUsecase = new GetPatientsUsecase(repository);
 export const getPatientByIdUsecase = new GetPatientByIdUsecase(repository);
+export const updatePatientUsecase = new UpdatePatientUsecase(repository);

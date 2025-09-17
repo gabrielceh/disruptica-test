@@ -1,4 +1,5 @@
 import { Controller, useForm } from "react-hook-form";
+import styles from "./patient-info-section.module.css"
 import { Gender, Roles } from "@/core/domain/entities";
 import { genderToString } from "@/core/utils";
 import { patientSchema, type PatientFormValues } from "@modules/patients/presentation/schemas/patientSchema";
@@ -12,12 +13,14 @@ import { DatePicker } from "@/core/presentation/components";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useUpdatePatientMutation } from "../../../hooks";
+import { toast } from "sonner";
 
 
 export function PatientInfoSection() {
   const patient = usePatientDetailsStore(state => state.patient);
   const user = useAuthStore(state => state.user);
-
+  const mutation = useUpdatePatientMutation()
 
   const {reset, control, handleSubmit, register, formState: { errors } } = useForm<PatientFormValues>({
     resolver: zodResolver(patientSchema),
@@ -28,7 +31,7 @@ export function PatientInfoSection() {
     reset({
       name: patient?.name ?? "",
       lastName: patient?.lastName ?? "",
-      dateOfBirth: (patient?.dateOfBirth) instanceof Date ? patient?.dateOfBirth : new Date(),
+      birthDate: patient?.birthDate ? new Date(patient?.birthDate) : new Date(),
       gender: patient?.gender ?? Gender.O ,
     });
   }, [patient, reset]);
@@ -36,14 +39,32 @@ export function PatientInfoSection() {
 
 
 
-  const onSubmit = (data: PatientFormValues) => {
-    console.log("✅ Form data:", data);
+  const onSubmit = async (data: PatientFormValues) => {
+    await mutation.mutate({
+      ...data,
+      birthDate: data.birthDate,
+      id: patient?.id ?? '',
+      isActive: patient?.isActive ?? false,
+      consultations: patient?.consultations ?? [],
+    },{
+      onSuccess: () => {
+        toast("Event has been created", {
+          description: "Patient has been updated",
+        })
+      },
+      onError: (error) => {
+        toast("Error updating patient", {
+          description: error.message,
+        })
+      }
+    });
+
   };
 
   return (
      <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <section>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+        <section className={styles.formSection}>
           <div>
             <Label>Name</Label>
             <Input
@@ -67,21 +88,21 @@ export function PatientInfoSection() {
           </div>
         </section>
 
-        <section>
+        <section className={styles.formSection}>
           <div>
             <Label>Date of birth</Label>
             <Controller
               control={control}
-              name="dateOfBirth"
-              disabled={user.role === Roles.user}
+              name="birthDate"
               render={({ field }) => (
-                <DatePicker
+                  <DatePicker
+                  isDisabled={user.role === Roles.user}
                   value={field.value || null}
                   onChange={(date) => field.onChange(date ?? undefined)}
                 />
               )}
             />
-            {errors.dateOfBirth && <p className="text-red-500 text-sm">{errors.dateOfBirth.message}</p>}
+            {errors.birthDate && <p className="text-red-500 text-sm">{errors.birthDate.message}</p>}
           </div>
 
           <div>
@@ -89,10 +110,10 @@ export function PatientInfoSection() {
             <Controller
               control={control}
               name="gender"
-              disabled={user.role === Roles.user}
+              
               render={({ field }) => (
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger className="w-[180px]">
+                <Select value={field.value} onValueChange={field.onChange} disabled={user.role === Roles.user}>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Gender" />
                   </SelectTrigger>
                   <SelectContent>
@@ -108,9 +129,12 @@ export function PatientInfoSection() {
         </section>
 
        {
-        user.role === Roles.admin && <Button type="submit" >
+        user.role === Roles.admin && 
+        <div className={styles.btnContainer}>
+          <Button type="submit" disabled={mutation.isPending}>
             Save
           </Button>
+        </div>
         }
       </form>
     </div>

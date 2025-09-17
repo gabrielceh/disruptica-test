@@ -33,7 +33,7 @@ export  function TablePatients() {
             <TableRow key={patient.id}>
               <TableCell>{patient.name} {patient.lastName}</TableCell>
               <TableCell>{patient.gender}</TableCell>
-              <TableCell>{dayjs(patient.dateOfBirth).format('MM/DD/YYYY')}</TableCell>
+              <TableCell>{dayjs(patient.birthDate).format('MM/DD/YYYY')}</TableCell>
               <TableCell>
                 <div className="flex gap-2">
                   <Button onClick={()=>onClickPatient(patient.id)}>

@@ -10,7 +10,7 @@ export const patientSchema = z.object({
     .string()
     .min(1, { message: "Last name is required" })
     .max(50, { message: "Last name must have at most 50 characters" }),
-   dateOfBirth:  z.date().transform((value) => new Date(value))
+  birthDate:  z.date().transform((value) => new Date(value))
     .refine((date) => !isNaN(date.getTime()), { message: "Invalid date format" })
     .refine((date) => date <= new Date(), { message: "Date cannot be in the future" }),
   gender: z.enum([Gender.F, Gender.M, Gender.O],{

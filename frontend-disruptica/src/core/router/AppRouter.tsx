@@ -1,9 +1,8 @@
-
 import { Route, Routes } from "react-router";
-import { MainLayout } from "@/core/presentation/layouts";
 import { AuthRoutes, AuthRouter } from "@/modules/auth/router";
 import { RootPage } from "./RootPage";
 import { PatientsRouter, PatientsRoutes } from "@/modules/patients/router";
+import { PrivateRoute } from "./PrivateRoute";
 
 export function AppRouter() {
   return (
@@ -11,7 +10,7 @@ export function AppRouter() {
         <Route path="/" element={<RootPage/>} />
         <Route path={`${AuthRoutes.auth}/*`} element={<AuthRouter />} />
 
-        <Route element={<MainLayout />}>
+        <Route element={<PrivateRoute />}>
           <Route path={`/${PatientsRoutes.patients}/*`} element={<PatientsRouter/>} />
         </Route>
 

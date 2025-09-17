@@ -4,7 +4,7 @@ export interface Patient {
     id:            string;
     name:          string;
     lastName:      string;
-    dateOfBirth:   Date;
+    birthDate:     Date;
     gender:        GenderType;
     consultations: Consultation[];
     isActive:      boolean;
