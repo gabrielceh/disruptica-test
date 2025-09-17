@@ -19,6 +19,7 @@ describe("PatientController - update", () => {
       deactivate: jest.fn(),
       findByName: jest.fn(),
       getActivePatients: jest.fn(),
+      getPatientById: jest.fn(),
     };
 
     controller = new PatientController(mockRepo);

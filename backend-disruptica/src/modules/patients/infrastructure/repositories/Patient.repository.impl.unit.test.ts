@@ -17,6 +17,7 @@ describe("PatientRepositoryImpl (delegation)", () => {
       findByName: jest.fn(),
       getActivePatients: jest.fn(),
       update: jest.fn(),
+      getPatientById: jest.fn(),
 
     };
 

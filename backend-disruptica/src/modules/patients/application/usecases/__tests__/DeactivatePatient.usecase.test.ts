@@ -1,5 +1,6 @@
 import { DeactivatePatientUseCase } from "../DeactivatePatient.usecase";
-import { PatientRepository } from "@src/modules/patients/domain/repositories";
+import { PatientRepository } from "../../../domain/repositories";
+
 
 describe("DeactivatePatientUseCase", () => {
   let mockRepo: jest.Mocked<PatientRepository>;
@@ -14,6 +15,7 @@ describe("DeactivatePatientUseCase", () => {
       findByName: jest.fn(),
       getActivePatients: jest.fn(),
       update: jest.fn(),
+      getPatientById: jest.fn(),
     };
     usecase = new DeactivatePatientUseCase(mockRepo);
   });

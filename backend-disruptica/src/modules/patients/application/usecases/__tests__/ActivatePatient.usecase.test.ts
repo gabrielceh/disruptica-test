@@ -1,4 +1,4 @@
-import { PatientRepository } from "@src/modules/patients/domain/repositories";
+import { PatientRepository } from "../../../domain/repositories";
 import { ActivatePatientUseCase } from "../ActivatePatient.usecase";
 
 
@@ -15,6 +15,7 @@ describe("ActivatePatientUseCase", () => {
       findByName: jest.fn(),
       getActivePatients: jest.fn(),
       update: jest.fn(),
+      getPatientById: jest.fn(),
     };
     usecase = new ActivatePatientUseCase(mockRepo);
   });

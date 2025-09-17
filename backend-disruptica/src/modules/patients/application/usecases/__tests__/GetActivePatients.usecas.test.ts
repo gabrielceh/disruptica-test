@@ -1,6 +1,6 @@
-import { PatientRepository } from "@src/modules/patients/domain/repositories";
+import { PatientRepository } from "../../../domain/repositories";
 import { GetActivePatientsUseCase } from "../GetActivePatients.usecase";
-import { Patient, Gender } from "@modules/patients/domain/entities";
+import { Patient, Gender } from "../../../domain/entities";
 
 
 describe("GetActivePatientsUseCase", () => {
@@ -16,6 +16,7 @@ describe("GetActivePatientsUseCase", () => {
       findByName: jest.fn(),
       getActivePatients: jest.fn(),
       update: jest.fn(),
+      getPatientById: jest.fn(),
     };
     usecase = new GetActivePatientsUseCase(mockRepo);
   });

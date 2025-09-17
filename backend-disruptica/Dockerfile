@@ -1,26 +1,25 @@
-# Base image
-FROM node:22-alpine
+# -------- Stage 1: Build --------
+FROM node:22-alpine AS builder
 
-# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
 COPY package*.json ./
+RUN npm install --include=dev
 
-# Install dependencies
-RUN npm install
-
-# Copy source code
 COPY . .
-
-# Build TypeScript
 RUN npm run build
 
-# Set environment variable for the port
-ENV PORT=3000
+# -------- Stage 2: Runtime --------
+FROM node:22-alpine
 
-# Expose port
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install --omit=dev
+
+COPY --from=builder /app/dist ./dist
+
+ENV PORT=3000
 EXPOSE 3000
 
-# Command to run
 CMD ["node", "dist/index.js"]
