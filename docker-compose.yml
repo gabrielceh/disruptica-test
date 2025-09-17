@@ -1,0 +1,30 @@
+services:
+  backend:
+    build: 
+      context: ./backend-disruptica
+    container_name: backend
+    ports:
+      - "3000:3000"
+    environment:
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - CORS_WHITELIST=${CORS_WHITELIST}
+      - PORT=${PORT}
+    networks:
+      - app-network
+
+  frontend:
+    build: 
+      context: ./frontend-disruptica
+      args:
+        VITE_BACKEND_URL: http://localhost:3000
+    container_name: frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
