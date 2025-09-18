@@ -92,3 +92,15 @@ npm install
 npm run dev
 ```
 Runs frontend at http://localhost:5173.
+
+---
+
+## Login
+
+```
+user: admin@app.com
+password: 123456789
+
+user: user@app.com
+password: 123456789
+```
