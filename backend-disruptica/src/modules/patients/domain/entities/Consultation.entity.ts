@@ -1,22 +1,41 @@
-interface ConsultationProps {
-  id:           string;
-  date:         Date;
-  reason:       string;
-  observations: string;
-}
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+} from "typeorm";
+import { Patient } from "./Patient.entity";
 
-
+@Entity("consultations")
 export class Consultation {
-  public readonly id:  string;
-  public date:         Date;
-  public reason:       string;
-  public observations: string;
+  @PrimaryGeneratedColumn("uuid")
+  public readonly id!: string;
 
-  constructor(newConsultation: ConsultationProps) {
-    this.id = newConsultation.id;
-    this.date = newConsultation.date;
-    this.reason = newConsultation.reason;
-    this.observations = newConsultation.observations;
+  @Column({ type: "date" })
+  public date!: Date;
+
+  @Column()
+  public reason!: string;
+
+  @Column()
+  public observations!: string;
+
+  @ManyToOne(() => Patient, (patient) => patient.consultations, {
+    onDelete: "CASCADE",
+  })
+  public patient!: Patient;
+
+  constructor(props?: {
+    id?: string;
+    date: Date;
+    reason: string;
+    observations: string;
+  }) {
+    if (props) {
+      this.id = props.id ?? crypto.randomUUID();
+      this.date = props.date;
+      this.reason = props.reason;
+      this.observations = props.observations;
+    }
   }
- 
 }
