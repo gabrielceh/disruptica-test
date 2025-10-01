@@ -90,7 +90,7 @@ CORS_WHITELIST="http://localhost:5173"
 POSTGRES_USER=admin
 POSTGRES_PASSWORD=admin123
 POSTGRES_DB=hospital
-PORT
+PORT=3000
 ```
 
 ### 3. Start with Docker Compose
