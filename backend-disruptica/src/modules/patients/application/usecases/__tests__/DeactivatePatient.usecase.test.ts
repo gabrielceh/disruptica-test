@@ -1,31 +1,40 @@
-import { DeactivatePatientUseCase } from "../DeactivatePatient.usecase";
 import { PatientRepository } from "../../../domain/repositories";
-
+import { DeactivatePatientUseCase } from "../DeactivatePatient.usecase";
 
 describe("DeactivatePatientUseCase", () => {
+  let useCase: DeactivatePatientUseCase;
   let mockRepo: jest.Mocked<PatientRepository>;
-  let usecase: DeactivatePatientUseCase;
 
   beforeEach(() => {
     mockRepo = {
       activate: jest.fn(),
       deactivate: jest.fn(),
-      addConsultation: jest.fn(),
-      create: jest.fn(),
-      findByName: jest.fn(),
       getActivePatients: jest.fn(),
-      update: jest.fn(),
       getPatientById: jest.fn(),
+      findByName: jest.fn(),
+      create: jest.fn(),
+      update: jest.fn(),
+      addConsultation: jest.fn(),
     };
-    usecase = new DeactivatePatientUseCase(mockRepo);
+
+    useCase = new DeactivatePatientUseCase(mockRepo);
   });
 
-  it("should deactivate a patient", async () => {
+  it("✅ should deactivate a patient successfully", async () => {
     mockRepo.deactivate.mockResolvedValue(true);
 
-    const result = await usecase.execute("p1");
+    const result = await useCase.execute("p-1");
 
+    expect(mockRepo.deactivate).toHaveBeenCalledWith("p-1");
     expect(result).toBe(true);
-    expect(mockRepo.deactivate).toHaveBeenCalledWith("p1");
+  });
+
+  it("❌ should return false if deactivation fails", async () => {
+    mockRepo.deactivate.mockResolvedValue(false);
+
+    const result = await useCase.execute("p-2");
+
+    expect(mockRepo.deactivate).toHaveBeenCalledWith("p-2");
+    expect(result).toBe(false);
   });
 });

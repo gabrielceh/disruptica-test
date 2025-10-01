@@ -3,7 +3,7 @@ import { PatientRepository } from "@modules/patients/domain/repositories";
 import { Gender, Patient } from "@modules/patients/domain/entities";
 import { ApiResponse } from "@src/core/shared";
 
-describe("PatientController - create", () => {
+describe("PatientController - getPatientById", () => {
   let controller: PatientController;
   let mockRepo: jest.Mocked<PatientRepository>;
   let mockPatient: Patient;
@@ -37,26 +37,25 @@ describe("PatientController - create", () => {
     }));
   });
 
-  it("✅ should create a new patient", async () => {
-    const req: any = { body: { ...mockPatient } };
+  it("✅ should return patient by id successfully", async () => {
+    const req: any = { params: { id: "p-1" } };
     const res = mockRes();
-    mockRepo.create.mockResolvedValue(mockPatient);
+    mockRepo.getPatientById.mockResolvedValue(mockPatient);
 
-    await controller.create(req, res);
+    await controller.getPatientById(req, res);
 
-    expect(mockRepo.create).toHaveBeenCalled();
-    expect(res.status).toHaveBeenCalledWith(201);
+    expect(mockRepo.getPatientById).toHaveBeenCalledWith("p-1");
     expect(res.json).toHaveBeenCalledWith(ApiResponse.success(mockPatient));
   });
 
   it("❌ should return 400 on error", async () => {
-    const req: any = { body: {} };
+    const req: any = { params: { id: "p-2" } };
     const res = mockRes();
-    mockRepo.create.mockRejectedValue(new Error("Failed"));
+    mockRepo.getPatientById.mockRejectedValue(new Error("DB Error"));
 
-    await controller.create(req, res);
+    await controller.getPatientById(req, res);
 
     expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith(ApiResponse.error("Failed"));
+    expect(res.json).toHaveBeenCalledWith(ApiResponse.error("DB Error"));
   });
 });

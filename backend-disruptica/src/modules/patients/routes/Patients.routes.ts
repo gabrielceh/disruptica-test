@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { LocalPatientDatasource } from "@modules/patients/infrastructure/datasources";
+import { DbPatientsDatasource  } from "@modules/patients/infrastructure/datasources";
 import { PatientRepositoryImpl } from "@modules/patients/infrastructure/repositories";
 import { PatientController } from "@modules/patients/controllers/Patient.controller";
 import {validateCreatePatient, validateFindByName, validateUpdatePatient, validateAddConsultation, validatePatientId } from "@modules/patients/infrastructure/middlewares";
@@ -7,8 +7,8 @@ import { requireAdmin, validateToken } from "@src/core/shared/middlewares";
 
 const router = Router();
 
-const patientLocalDatasource = new LocalPatientDatasource();
-const patientRepository = new PatientRepositoryImpl(patientLocalDatasource);
+const patientDatasource = new DbPatientsDatasource();
+const patientRepository = new PatientRepositoryImpl(patientDatasource);
 const patientController = new PatientController(patientRepository);
 
 router.get('/',

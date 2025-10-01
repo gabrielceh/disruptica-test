@@ -1,40 +1,49 @@
-import { UpdatePatientUseCase } from "../UpdatePatient.usecase";
+import { Gender, Patient } from "../../../domain/entities";
 import { PatientRepository } from "../../../domain/repositories";
-import { Patient, Gender } from "../../../domain/entities";
-
+import { UpdatePatientUseCase } from "../UpdatePatient.usecase";
 
 describe("UpdatePatientUseCase", () => {
+  let useCase: UpdatePatientUseCase;
   let mockRepo: jest.Mocked<PatientRepository>;
-  let usecase: UpdatePatientUseCase;
+  let mockPatient: Patient;
 
   beforeEach(() => {
     mockRepo = {
       activate: jest.fn(),
       deactivate: jest.fn(),
-      addConsultation: jest.fn(),
-      create: jest.fn(),
-      findByName: jest.fn(),
       getActivePatients: jest.fn(),
-      update: jest.fn(),
       getPatientById: jest.fn(),
+      findByName: jest.fn(),
+      create: jest.fn(),
+      update: jest.fn(),
+      addConsultation: jest.fn(),
     };
-    usecase = new UpdatePatientUseCase(mockRepo);
+
+    useCase = new UpdatePatientUseCase(mockRepo);
+
+    mockPatient = Object.assign(new Patient({
+      id: "p-1",
+      name: "John",
+      lastName: "Doe",
+      birthDate: new Date("1990-01-01"),
+      gender: Gender.MALE,
+      consultations: [],
+    }));
   });
 
-  it("should update a patient", async () => {
-    const patient = new Patient({
-      id: "p1",
-      name: "Laura",
-      lastName: "Ramírez",
-      birthDate: new Date("1992-01-01"),
-      gender: Gender.FEMALE,
-    });
+  it("✅ should update a patient successfully", async () => {
+    mockRepo.update.mockResolvedValue(mockPatient);
 
-    mockRepo.update.mockResolvedValue(patient);
+    const result = await useCase.execute(mockPatient);
 
-    const result = await usecase.execute(patient);
+    expect(mockRepo.update).toHaveBeenCalledWith(mockPatient);
+    expect(result).toBe(mockPatient);
+  });
 
-    expect(result).toBe(patient);
-    expect(mockRepo.update).toHaveBeenCalledWith(patient);
+  it("❌ should throw error if repository fails", async () => {
+    mockRepo.update.mockRejectedValue(new Error("Update failed"));
+
+    await expect(useCase.execute(mockPatient))
+      .rejects.toThrow("Update failed");
   });
 });

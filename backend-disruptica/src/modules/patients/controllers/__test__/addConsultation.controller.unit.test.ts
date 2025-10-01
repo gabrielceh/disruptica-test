@@ -1,70 +1,71 @@
 import { PatientController } from "../Patient.controller";
 import { PatientRepository } from "@modules/patients/domain/repositories";
-import { Consultation } from "@modules/patients/domain/entities";
+import { Consultation, Gender, Patient } from "@modules/patients/domain/entities";
 import { ApiResponse } from "@src/core/shared";
 
 describe("PatientController - addConsultation", () => {
-  let mockRepo: jest.Mocked<PatientRepository>;
   let controller: PatientController;
-  let mockReq: any;
-  let mockRes: any;
+  let mockRepo: jest.Mocked<PatientRepository>;
+  let mockPatient: Patient;
+  let mockConsultation: Consultation;
+
+  const mockRes = () => {
+    const res: any = {};
+    res.status = jest.fn().mockReturnValue(res);
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
 
   beforeEach(() => {
     mockRepo = {
-      addConsultation: jest.fn(),
       activate: jest.fn(),
-      create: jest.fn(),
       deactivate: jest.fn(),
-      findByName: jest.fn(),
       getActivePatients: jest.fn(),
-      update: jest.fn(),
       getPatientById: jest.fn(),
+      findByName: jest.fn(),
+      create: jest.fn(),
+      update: jest.fn(),
+      addConsultation: jest.fn(),
     };
-
     controller = new PatientController(mockRepo);
 
-    mockRes = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
+    mockPatient = Object.assign(new Patient({
+      id: "p-1",
+      name: "John",
+      lastName: "Doe",
+      birthDate: new Date("1990-01-01"),
+      gender: Gender.MALE,
+      consultations: [],
+    }));
+
+    mockConsultation = Object.assign(new Consultation({
+      id: "c-1",
+      date: new Date(),
+      reason: "Flu",
+      observations: "Rest for 5 days",
+    }));
   });
 
-  it("✅ debería añadir una consulta y devolver ApiResponse.success con status 201", async () => {
-    const consultation: Consultation = {
-      id: "c1",
-      date: new Date("2025-01-01"),
-      reason: "Dolor de cabeza",
-      observations: "Revisar presión arterial",
-    };
+  it("✅ should add consultation successfully", async () => {
+    const req: any = { params: { id: "p-1" }, body: mockConsultation };
+    const res = mockRes();
+    mockRepo.addConsultation.mockResolvedValue(mockConsultation);
 
-    mockReq = {
-      params: { id: "p1" },
-      body: consultation,
-    };
+    await controller.addConsultation(req, res);
 
-    mockRepo.addConsultation.mockResolvedValue(consultation);
-
-    await controller.addConsultation(mockReq, mockRes);
-
-    expect(mockRepo.addConsultation).toHaveBeenCalledWith("p1", consultation);
-    expect(mockRes.status).toHaveBeenCalledWith(201);
-    expect(mockRes.json).toHaveBeenCalledWith(ApiResponse.success(consultation));
+    expect(mockRepo.addConsultation).toHaveBeenCalledWith("p-1", mockConsultation);
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.json).toHaveBeenCalledWith(ApiResponse.success(mockConsultation));
   });
 
-  it("❌ debería manejar errores y devolver 400 con ApiResponse.error", async () => {
-    const consultation = { reason: "Sin fecha" }; // consulta inválida
+  it("❌ should return 400 on error", async () => {
+    const req: any = { params: { id: "p-1" }, body: mockConsultation };
+    const res = mockRes();
+    mockRepo.addConsultation.mockRejectedValue(new Error("Add consultation failed"));
 
-    mockReq = {
-      params: { id: "p1" },
-      body: consultation,
-    };
+    await controller.addConsultation(req, res);
 
-    mockRepo.addConsultation.mockRejectedValue(new Error("Invalid consultation data"));
-
-    await controller.addConsultation(mockReq, mockRes);
-
-    expect(mockRepo.addConsultation).toHaveBeenCalledWith("p1", consultation);
-    expect(mockRes.status).toHaveBeenCalledWith(400);
-    expect(mockRes.json).toHaveBeenCalledWith(ApiResponse.error("Invalid consultation data"));
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith(ApiResponse.error("Add consultation failed"));
   });
 });

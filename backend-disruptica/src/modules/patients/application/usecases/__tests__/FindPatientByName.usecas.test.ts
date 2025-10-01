@@ -1,40 +1,60 @@
-import { FindPatientByNameUseCase } from "../FindPatientByName.usecase";
+import { Gender, Patient } from "../../../domain/entities";
 import { PatientRepository } from "../../../domain/repositories";
-import { Patient, Gender } from "../../../domain/entities";
+import { FindPatientByNameUseCase } from "../FindPatientByName.usecase";
 
 
 describe("FindPatientByNameUseCase", () => {
+  let useCase: FindPatientByNameUseCase;
   let mockRepo: jest.Mocked<PatientRepository>;
-  let usecase: FindPatientByNameUseCase;
+  let mockPatients: Patient[];
 
   beforeEach(() => {
     mockRepo = {
       activate: jest.fn(),
       deactivate: jest.fn(),
-      addConsultation: jest.fn(),
-      create: jest.fn(),
-      findByName: jest.fn(),
       getActivePatients: jest.fn(),
-      update: jest.fn(),
       getPatientById: jest.fn(),
+      findByName: jest.fn(),
+      create: jest.fn(),
+      update: jest.fn(),
+      addConsultation: jest.fn(),
     };
-    usecase = new FindPatientByNameUseCase(mockRepo);
+
+    useCase = new FindPatientByNameUseCase(mockRepo);
+
+    mockPatients = [
+      Object.assign(new Patient({
+        id: "p-1",
+        name: "John",
+        lastName: "Doe",
+        birthDate: new Date("1990-01-01"),
+        gender: Gender.MALE,
+        consultations: [],
+      })),
+      Object.assign(new Patient({
+        id: "p-2",
+        name: "John",
+        lastName: "Smith",
+        birthDate: new Date("1992-05-05"),
+        gender: Gender.MALE,
+        consultations: [],
+      })),
+    ];
   });
 
-  it("should find patients by name", async () => {
-    const patient = new Patient({
-      id: "p1",
-      name: "Ana",
-      lastName: "García",
-      birthDate: new Date("1995-01-01"),
-      gender: Gender.FEMALE,
-    });
+  it("✅ should find patients by name", async () => {
+    mockRepo.findByName.mockResolvedValue(mockPatients);
 
-    mockRepo.findByName.mockResolvedValue([patient]);
+    const result = await useCase.execute("John");
 
-    const result = await usecase.execute("Ana");
+    expect(mockRepo.findByName).toHaveBeenCalledWith("John");
+    expect(result).toBe(mockPatients);
+  });
 
-    expect(result).toEqual([patient]);
-    expect(mockRepo.findByName).toHaveBeenCalledWith("Ana");
+  it("❌ should throw error if repository fails", async () => {
+    mockRepo.findByName.mockRejectedValue(new Error("Database error"));
+
+    await expect(useCase.execute("John"))
+      .rejects.toThrow("Database error");
   });
 });

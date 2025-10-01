@@ -1,4 +1,5 @@
 import { PatientDatasource } from "../../domain/datasources";
+import { AddConsultationDTO, CreatePatientDTO } from "../../domain/dto";
 import { Consultation, Patient } from "../../domain/entities";
 import { PatientRepository } from "../../domain/repositories";
 
@@ -18,7 +19,7 @@ export class PatientRepositoryImpl implements PatientRepository {
     return this.datasource.findByName(name);
   }
 
-  create(patient: Patient): Promise<Patient> {
+  create(patient: CreatePatientDTO): Promise<Patient> {
     return this.datasource.create(patient);
   }
 
@@ -34,7 +35,7 @@ export class PatientRepositoryImpl implements PatientRepository {
     return this.datasource.activate(patientId);
   }
 
-  addConsultation(patientId: string, consultation: Consultation): Promise<Consultation> {
+  addConsultation(patientId: string, consultation: AddConsultationDTO): Promise<Consultation> {
     return this.datasource.addConsultation(patientId, consultation);
   }
 }

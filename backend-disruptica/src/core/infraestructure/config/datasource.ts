@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm';
 
 import { User } from '@src/modules/auth/domain/entities';
 import { environments } from './environments';
+import { Patient, Consultation } from '@src/modules/patients/domain/entities';
 
 
 export const AppDataSource = new DataSource({
@@ -14,5 +15,5 @@ export const AppDataSource = new DataSource({
   database: environments.postgresDb,
   synchronize: true, // ⚠️ true solo en desarrollo
   logging: false,
-  entities: [User],
+  entities: [User, Patient, Consultation],
 });

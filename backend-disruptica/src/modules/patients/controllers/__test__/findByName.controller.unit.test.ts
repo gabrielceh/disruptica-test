@@ -1,63 +1,61 @@
 import { PatientController } from "../Patient.controller";
 import { PatientRepository } from "@modules/patients/domain/repositories";
-import { Patient } from "@modules/patients/domain/entities";
-import { Gender } from "@modules/patients/domain/entities/Gender.enum";
+import { Gender, Patient } from "@modules/patients/domain/entities";
 import { ApiResponse } from "@src/core/shared";
 
 describe("PatientController - findByName", () => {
   let controller: PatientController;
   let mockRepo: jest.Mocked<PatientRepository>;
-  let mockRes: any;
+  let mockPatient: Patient;
+
+  const mockRes = () => {
+    const res: any = {};
+    res.status = jest.fn().mockReturnValue(res);
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
 
   beforeEach(() => {
     mockRepo = {
-      create: jest.fn(),
-      getActivePatients: jest.fn(),
-      findByName: jest.fn(),
-      update: jest.fn(),
       activate: jest.fn(),
       deactivate: jest.fn(),
-      addConsultation: jest.fn(),
+      getActivePatients: jest.fn(),
       getPatientById: jest.fn(),
+      findByName: jest.fn(),
+      create: jest.fn(),
+      update: jest.fn(),
+      addConsultation: jest.fn(),
     };
-
     controller = new PatientController(mockRepo);
-
-    mockRes = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
+    mockPatient = Object.assign(new Patient({
+      id: "p-1",
+      name: "John",
+      lastName: "Doe",
+      birthDate: new Date("1990-01-01"),
+      gender: Gender.MALE,
+      consultations: [],
+    }));
   });
 
-  it("✅ debería devolver los pacientes encontrados con ApiResponse.success", async () => {
-    const patients = [
-      new Patient({
-        name: "Ana",
-        lastName: "Lopez",
-        birthDate: new Date("1990-05-05"),
-        gender: Gender.FEMALE,
-      }),
-    ];
+  it("✅ should return patients with the given name", async () => {
+    const req: any = { params: { name: "John" } };
+    const res = mockRes();
+    mockRepo.findByName.mockResolvedValue([mockPatient]);
 
-    mockRepo.findByName.mockResolvedValue(patients);
+    await controller.findByName(req, res);
 
-    const mockReq: any = { params: { name: "Ana" } };
-
-    await controller.findByName(mockReq, mockRes);
-
-    expect(mockRepo.findByName).toHaveBeenCalledWith("Ana");
-    expect(mockRes.json).toHaveBeenCalledWith(ApiResponse.success(patients));
+    expect(mockRepo.findByName).toHaveBeenCalledWith("John");
+    expect(res.json).toHaveBeenCalledWith(ApiResponse.success([mockPatient]));
   });
 
-  it("❌ debería manejar errores y devolver 500 con ApiResponse.error", async () => {
-    mockRepo.findByName.mockRejectedValue(new Error("DB query failed"));
+  it("❌ should return 500 on error", async () => {
+    const req: any = { params: { name: "John" } };
+    const res = mockRes();
+    mockRepo.findByName.mockRejectedValue(new Error("DB Error"));
 
-    const mockReq: any = { params: { name: "Ana" } };
+    await controller.findByName(req, res);
 
-    await controller.findByName(mockReq, mockRes);
-
-    expect(mockRepo.findByName).toHaveBeenCalledWith("Ana");
-    expect(mockRes.status).toHaveBeenCalledWith(500);
-    expect(mockRes.json).toHaveBeenCalledWith(ApiResponse.error("DB query failed"));
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith(ApiResponse.error("DB Error"));
   });
 });

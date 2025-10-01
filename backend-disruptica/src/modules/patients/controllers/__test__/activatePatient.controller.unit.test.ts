@@ -3,48 +3,64 @@ import { PatientRepository } from "@modules/patients/domain/repositories";
 import { ApiResponse } from "@src/core/shared";
 
 describe("PatientController - activate", () => {
-  let mockRepo: jest.Mocked<PatientRepository>;
   let controller: PatientController;
-  let mockReq: any;
-  let mockRes: any;
+  let mockRepo: jest.Mocked<PatientRepository>;
+
+  const mockRes = () => {
+    const res: any = {};
+    res.status = jest.fn().mockReturnValue(res);
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
 
   beforeEach(() => {
     mockRepo = {
       activate: jest.fn(),
       deactivate: jest.fn(),
-      addConsultation: jest.fn(),
-      create: jest.fn(),
-      findByName: jest.fn(),
       getActivePatients: jest.fn(),
-      update: jest.fn(),
       getPatientById: jest.fn(),
+      findByName: jest.fn(),
+      create: jest.fn(),
+      update: jest.fn(),
+      addConsultation: jest.fn(),
     };
     controller = new PatientController(mockRepo);
-
-    mockRes = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
   });
 
-  it("✅ debería activar un paciente y devolver ApiResponse.success", async () => {
-    mockReq = { params: { id: "p1" } };
+  it("✅ should activate a patient successfully", async () => {
+    const req: any = { params: { id: "p-1" } };
+    const res = mockRes();
     mockRepo.activate.mockResolvedValue(true);
 
-    await controller.activate(mockReq, mockRes);
+    await controller.activate(req, res);
 
-    expect(mockRepo.activate).toHaveBeenCalledWith("p1");
-    expect(mockRes.json).toHaveBeenCalledWith(ApiResponse.success("Patient activated"));
+    expect(mockRepo.activate).toHaveBeenCalledWith("p-1");
+    expect(res.json).toHaveBeenCalledWith(
+      ApiResponse.success("Patient with id p-1 was activated")
+    );
   });
 
-  it("❌ debería manejar errores y devolver 400 con ApiResponse.error", async () => {
-    mockReq = { params: { id: "p1" } };
-    mockRepo.activate.mockRejectedValue(new Error("Activation failed"));
+  it("❌ should return 400 if patient not found", async () => {
+    const req: any = { params: { id: "p-2" } };
+    const res = mockRes();
+    mockRepo.activate.mockResolvedValue(false);
 
-    await controller.activate(mockReq, mockRes);
+    await controller.activate(req, res);
 
-    expect(mockRepo.activate).toHaveBeenCalledWith("p1");
-    expect(mockRes.status).toHaveBeenCalledWith(400);
-    expect(mockRes.json).toHaveBeenCalledWith(ApiResponse.error("Activation failed"));
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith(
+      ApiResponse.error("Patient with id p-2 not found")
+    );
+  });
+
+  it("❌ should return 400 on error", async () => {
+    const req: any = { params: { id: "p-3" } };
+    const res = mockRes();
+    mockRepo.activate.mockRejectedValue(new Error("DB Error"));
+
+    await controller.activate(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith(ApiResponse.error("DB Error"));
   });
 });

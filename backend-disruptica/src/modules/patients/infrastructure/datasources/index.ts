@@ -1,1 +1,1 @@
-export * from './LocalPatient.datasource';
+export * from './DbPatients.datasource';

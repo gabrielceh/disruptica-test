@@ -1,40 +1,56 @@
-import { CreatePatientUseCase } from "../CreatePatient.usecase";
+import { CreatePatientDTO } from "../../../domain/dto";
+import { Gender, Patient } from "../../../domain/entities";
 import { PatientRepository } from "../../../domain/repositories";
-import { Patient, Gender } from "../../../domain/entities";
+import { CreatePatientUseCase } from "../CreatePatient.usecase";
 
 
 describe("CreatePatientUseCase", () => {
+  let useCase: CreatePatientUseCase;
   let mockRepo: jest.Mocked<PatientRepository>;
-  let usecase: CreatePatientUseCase;
+  let mockPatient: Patient;
+  let mockDto: CreatePatientDTO;
 
   beforeEach(() => {
     mockRepo = {
       activate: jest.fn(),
       deactivate: jest.fn(),
-      addConsultation: jest.fn(),
-      create: jest.fn(),
-      findByName: jest.fn(),
       getActivePatients: jest.fn(),
-      update: jest.fn(),
       getPatientById: jest.fn(),
+      findByName: jest.fn(),
+      create: jest.fn(),
+      update: jest.fn(),
+      addConsultation: jest.fn(),
     };
-    usecase = new CreatePatientUseCase(mockRepo);
+
+    useCase = new CreatePatientUseCase(mockRepo);
+
+    mockDto = {
+      name: "Jane",
+      lastName: "Doe",
+      birthDate: new Date("1995-05-05"),
+      gender: Gender.FEMALE,
+    };
+
+    mockPatient = Object.assign(new Patient({
+      ...mockDto,
+      id: "p-1",
+      consultations: [],
+    }));
   });
 
-  it("should create a patient", async () => {
-    const patient = new Patient({
-      id: "p1",
-      name: "Juan",
-      lastName: "Pérez",
-      birthDate: new Date("1990-01-01"),
-      gender: Gender.MALE,
-    });
+  it("✅ should create a new patient", async () => {
+    mockRepo.create.mockResolvedValue(mockPatient);
 
-    mockRepo.create.mockResolvedValue(patient);
+    const result = await useCase.execute(mockDto);
 
-    const result = await usecase.execute(patient);
+    expect(mockRepo.create).toHaveBeenCalledWith(mockDto);
+    expect(result).toBe(mockPatient);
+  });
 
-    expect(result).toBe(patient);
-    expect(mockRepo.create).toHaveBeenCalledWith(patient);
+  it("❌ should throw error if repository fails", async () => {
+    mockRepo.create.mockRejectedValue(new Error("Failed to create patient"));
+
+    await expect(useCase.execute(mockDto))
+      .rejects.toThrow("Failed to create patient");
   });
 });

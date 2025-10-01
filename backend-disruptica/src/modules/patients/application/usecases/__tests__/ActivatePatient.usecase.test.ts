@@ -1,31 +1,40 @@
-import { PatientRepository } from "../../../domain/repositories";
 import { ActivatePatientUseCase } from "../ActivatePatient.usecase";
+import { PatientRepository } from "../../../domain/repositories";
 
 
 describe("ActivatePatientUseCase", () => {
+  let useCase: ActivatePatientUseCase;
   let mockRepo: jest.Mocked<PatientRepository>;
-  let usecase: ActivatePatientUseCase;
 
   beforeEach(() => {
     mockRepo = {
       activate: jest.fn(),
       deactivate: jest.fn(),
-      addConsultation: jest.fn(),
-      create: jest.fn(),
-      findByName: jest.fn(),
       getActivePatients: jest.fn(),
-      update: jest.fn(),
       getPatientById: jest.fn(),
+      findByName: jest.fn(),
+      create: jest.fn(),
+      update: jest.fn(),
+      addConsultation: jest.fn(),
     };
-    usecase = new ActivatePatientUseCase(mockRepo);
+    useCase = new ActivatePatientUseCase(mockRepo);
   });
 
-  it("should activate a patient", async () => {
+  it("✅ should activate a patient successfully", async () => {
     mockRepo.activate.mockResolvedValue(true);
 
-    const result = await usecase.execute("p1");
+    const result = await useCase.execute("p-1");
 
+    expect(mockRepo.activate).toHaveBeenCalledWith("p-1");
     expect(result).toBe(true);
-    expect(mockRepo.activate).toHaveBeenCalledWith("p1");
+  });
+
+  it("❌ should return false if activation fails", async () => {
+    mockRepo.activate.mockResolvedValue(false);
+
+    const result = await useCase.execute("p-2");
+
+    expect(mockRepo.activate).toHaveBeenCalledWith("p-2");
+    expect(result).toBe(false);
   });
 });
