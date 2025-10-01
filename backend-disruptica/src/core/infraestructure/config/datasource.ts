@@ -8,7 +8,7 @@ import { Patient, Consultation } from '@src/modules/patients/domain/entities';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  host: 'localhost',
+  host: 'db',
   port: 5432,
   username: environments.postgresUser,
   password: environments.postgresPassword,

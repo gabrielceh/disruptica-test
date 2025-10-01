@@ -1,3 +1,3 @@
-export abstract class SeedDataSource {
-  async generate() {}
+export interface SeedDataSource {
+  generate(): Promise<boolean>;
 }
