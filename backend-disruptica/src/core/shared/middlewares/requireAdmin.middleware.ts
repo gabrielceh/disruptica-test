@@ -2,8 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { ApiResponse } from "@src/core/shared";
 import { verifyToken } from '@core/shared/utils/jwt';
 
-const JWT_SECRET = process.env.JWT_SECRET || "secret"; // usa una variable de entorno en prod
-
 export  const requireAdmin = async(
   req: Request,
   res: Response,

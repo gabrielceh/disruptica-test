@@ -2,6 +2,7 @@ import { PatientDatasource } from "@modules/patients/domain/datasources";
 import { Consultation, Patient } from "@modules/patients/domain/entities";
 import { AddConsultationDTO, CreatePatientDTO } from "../../domain/dto";
 import { AppDataSource } from "@src/core/infraestructure/config/datasource";
+import { ILike } from "typeorm";
 
 
 export class DbPatientsDatasource implements PatientDatasource {
@@ -32,7 +33,10 @@ export class DbPatientsDatasource implements PatientDatasource {
 
   async findByName(name: string): Promise<Patient[]> {
     return this.patients.find({
-      where: { name },
+      where: [
+        { name: ILike(`%${name}%`) },
+        {lastName: ILike(`%${name}%`)}
+      ],
       relations: ["consultations"],
     });
   }
