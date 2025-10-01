@@ -1,36 +1,69 @@
-import { LocalAuthDatasource } from "../LocalAuth.datasource";
-import { usersData } from "../../mock";
+import { DBAuthDatasource } from '@src/modules/auth/infrastructure/datasource/DBAuth.datasource';
+import { User } from '@modules/auth/domain/entities';
+import bcrypt from 'bcrypt';
 
-describe("LocalAuthDatasource", () => {
-  let datasource: LocalAuthDatasource;
+// Creamos un mock de repository
+const mockRepo = {
+  findOne: jest.fn(),
+};
+
+// Mock de AppDataSource
+jest.mock('@src/core/infraestructure/config/datasource', () => {
+  return {
+    AppDataSource: {
+      getRepository: jest.fn().mockImplementation(() => mockRepo),
+    },
+  };
+});
+
+
+describe('DBAuthDatasource', () => {
+  let datasource: DBAuthDatasource;
+  let mockUser: User;
+
+  beforeAll(async () => {
+    datasource = new DBAuthDatasource();
+
+    const hashedPassword = await bcrypt.hash('secret123', 10);
+    mockUser = Object.assign(new User(), {
+      id: 'uuid-1',
+      email: 'test@example.com',
+      password: hashedPassword,
+      name: 'Test User',
+      role: 'user',
+    });
+  });
 
   beforeEach(() => {
-    datasource = new LocalAuthDatasource();
+    jest.clearAllMocks();
   });
 
-  it("✅ should return a user if email and password are correct", async () => {
-    const testUser = usersData[0];
-    await expect(
-      datasource.findByEmailAndPassowrd(testUser.email, testUser.password)
-    ).resolves.toEqual(testUser);
+  it('✅ should return user when email and password are correct', async () => {
+    mockRepo.findOne.mockResolvedValue(mockUser);
+
+    const result = await datasource.findByEmailAndPassowrd(
+      'test@example.com',
+      'secret123'
+    );
+
+    expect(result).toBeInstanceOf(User);
+    expect(result?.email).toBe('test@example.com');
   });
 
-  it("❌ should throw an error if email is incorrect", async () => {
+  it('❌ should throw error if user not found', async () => {
+    mockRepo.findOne.mockResolvedValue(null);
+
     await expect(
-      datasource.findByEmailAndPassowrd("wrong@example.com", "password123")
-    ).rejects.toThrow("Email or password incorrect");
+      datasource.findByEmailAndPassowrd('notfound@example.com', 'secret123')
+    ).rejects.toThrow('Email or password incorrect');
   });
 
-  it("❌ should throw an error if password is incorrect", async () => {
-    const testUser = usersData[0];
-    await expect(
-      datasource.findByEmailAndPassowrd(testUser.email, "wrongpassword")
-    ).rejects.toThrow("Email or password incorrect");
-  });
+  it('❌ should throw error if password does not match', async () => {
+    mockRepo.findOne.mockResolvedValue(mockUser);
 
-  it("❌ should throw an error if both email and password are incorrect", async () => {
     await expect(
-      datasource.findByEmailAndPassowrd("wrong@example.com", "wrongpassword")
-    ).rejects.toThrow("Email or password incorrect");
+      datasource.findByEmailAndPassowrd('test@example.com', 'wrongPass')
+    ).rejects.toThrow('Email or password incorrect');
   });
 });
+

@@ -1,22 +1,30 @@
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from 'typeorm';
+import bcrypt from 'bcrypt';
+
+@Entity()
 export class User {
-  public id: string;
-  public email: string;
-  public password: string;
-  public name: string;
-  public role: string;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
-  constructor(
-    id: string,
-    email: string,
-    password: string,
-    name: string,
-    role: string
+  @Column({ unique: true })
+  email!: string;
 
-  ) {
-    this.id = id;
-    this.email = email;
-    this.password = password;
-    this.name = name;
-    this.role = role;
+  @Column()
+  password!: string;
+
+  @Column()
+  name!: string;
+
+  @Column({ default: 'user' })
+  role!: string;
+
+  @BeforeInsert()
+  async hashPassword() {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+  }
+
+  async comparePassword(plain: string): Promise<boolean> {
+    return bcrypt.compare(plain, this.password);
   }
 }

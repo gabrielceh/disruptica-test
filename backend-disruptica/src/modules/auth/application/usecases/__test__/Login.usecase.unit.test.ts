@@ -1,49 +1,61 @@
-import { LoginUseCase } from "../Login.usecase";
-import { AuthRepository } from "@modules/auth/domain/repositories";
-import { User } from "@modules/auth/domain/entities";
+// src/modules/auth/application/use-cases/__test__/LoginUseCase.unit.test.ts
+import { LoginUseCase } from '../Login.usecase';
+import { AuthRepository } from '@modules/auth/domain/repositories';
+import { User } from '@modules/auth/domain/entities';
 
-describe("LoginUseCase", () => {
-  let mockRepo: jest.Mocked<AuthRepository>;
+describe('LoginUseCase', () => {
+  let mockRepository: jest.Mocked<AuthRepository>;
   let useCase: LoginUseCase;
+  let mockUser: User;
 
-  const testUser: User = new User(
-    "1",
-    "test@example.com",
-    "password123",
-    "Test User",
-    "admin"
-  );
+  beforeAll(() => {
+    // Mock repository
+    mockRepository = {
+      findByEmailAndPassword: jest.fn(),
+    };
+
+    useCase = new LoginUseCase(mockRepository);
+
+    mockUser = Object.assign(new User(), {
+      id: 'uuid-1',
+      email: 'test@example.com',
+      password: 'hashed-pass',
+      name: 'Test User',
+      role: 'user',
+    });
+  });
 
   beforeEach(() => {
-    mockRepo = {
-      findByEmailAndPassword: jest.fn()
-    } as unknown as jest.Mocked<AuthRepository>;
-
-    useCase = new LoginUseCase(mockRepo);
+    jest.clearAllMocks();
   });
 
-  it("✅ should return a user when email and password are correct", async () => {
-    mockRepo.findByEmailAndPassword.mockResolvedValue(testUser);
+  it('✅ should return a user when repository finds one', async () => {
+    mockRepository.findByEmailAndPassword.mockResolvedValue(mockUser);
 
-    const result = await useCase.execute("test@example.com", "password123");
+    const result = await useCase.execute('test@example.com', 'secret123');
 
-    expect(result).toEqual(testUser);
-    expect(mockRepo.findByEmailAndPassword).toHaveBeenCalledWith("test@example.com", "password123");
+    expect(mockRepository.findByEmailAndPassword).toHaveBeenCalledWith(
+      'test@example.com',
+      'secret123'
+    );
+    expect(result).toBe(mockUser);
   });
 
-  it("❌ should return null if email/password are incorrect", async () => {
-    mockRepo.findByEmailAndPassword.mockResolvedValue(null);
+  it('❌ should return null when repository returns null', async () => {
+    mockRepository.findByEmailAndPassword.mockResolvedValue(null);
 
-    const result = await useCase.execute("wrong@example.com", "wrongpass");
+    const result = await useCase.execute('notfound@example.com', 'secret123');
 
     expect(result).toBeNull();
-    expect(mockRepo.findByEmailAndPassword).toHaveBeenCalledWith("wrong@example.com", "wrongpass");
   });
 
-  it("❌ should throw an error if repository fails", async () => {
-    mockRepo.findByEmailAndPassword.mockRejectedValue(new Error("DB error"));
+  it('❌ should throw an error when repository throws', async () => {
+    mockRepository.findByEmailAndPassword.mockRejectedValue(
+      new Error('Repository error')
+    );
 
-    await expect(useCase.execute("test@example.com", "password123")).rejects.toThrow("DB error");
-    expect(mockRepo.findByEmailAndPassword).toHaveBeenCalledWith("test@example.com", "password123");
+    await expect(
+      useCase.execute('test@example.com', 'wrongpass')
+    ).rejects.toThrow('Repository error');
   });
 });
