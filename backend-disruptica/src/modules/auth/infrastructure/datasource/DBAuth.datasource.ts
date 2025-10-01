@@ -9,14 +9,17 @@ export class DBAuthDatasource implements AuthDatasource {
     async findByEmailAndPassowrd(email: string, password: string): Promise<User | null> {
         try {
            const user = await this.usersData.findOne({ where: { email } });
+
            if (!user) {
-               throw new Error("Email or password incorrect");
+              throw new Error("Email or password incorrect");
            }
 
-           if (!await user.comparePassword(password)) {
-               throw new Error("Email or password incorrect");
+           const comparePassword = await user.comparePassword(password);
+           if (!comparePassword) {
+              throw new Error("Email or password incorrect");
            }
-            return Promise.resolve(user);
+
+            return user;
         } catch (error) {
             return Promise.reject(error);
         }

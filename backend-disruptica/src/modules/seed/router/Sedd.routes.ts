@@ -12,7 +12,7 @@ const repository = new SeedRepositoryImp(datasource);
 const generateSeedUseCase = new GenerateSeedUseCase(repository);
 const seedController = new SeedController(generateSeedUseCase);
 
-router.post("/", (req, res)=>
+router.get("/", (req, res)=>
   seedController.generateSeed(req, res)
 );
 
