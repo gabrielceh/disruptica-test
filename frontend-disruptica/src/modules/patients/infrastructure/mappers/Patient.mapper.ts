@@ -9,7 +9,7 @@ export class PatientMapper {
       name:          model.name,
       lastName:      model.lastName,
       birthDate:     model.birthDate,
-      gender:        model.gender == 'F' ? Gender.F : model.gender == 'M' ? Gender.M : Gender.F,
+      gender:        model.gender == 'F' ? Gender.F : model.gender == 'M' ? Gender.M : Gender.O,
       consultations: model.consultations.map((consultation) => ConsultationMapper.fromModelToEntity(consultation)),
       isActive:      model.isActive,
     };
